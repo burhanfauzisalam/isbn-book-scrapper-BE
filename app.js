@@ -100,6 +100,14 @@ app.get("/books", async (req, res) => {
   }
 });
 
+app.get("/", async (req, res) => {
+  try {
+    res.status(200).json({ message: "Server berjalan..." });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is online on port ${port}`);
 });
