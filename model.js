@@ -1,44 +1,56 @@
 import { Schema, model } from "mongoose";
 const bookSchema = new Schema({
-  title: {
+  tanggal: {
+    type: String,
+    default: "",
+  },
+  nobukti: {
+    type: String,
+    default: "",
+  },
+  judul: {
     type: String,
     require: true,
   },
-  author: {
+  katalogid: {
     type: String,
-    require: true,
+    default: "",
   },
-  page: {
-    type: Number,
-    require: true,
-  },
-  ISBN_10: {
-    type: Number,
-    require: true,
-  },
-  ISBN_13: {
-    type: Number,
-    require: true,
-  },
-  ISBN_10: {
-    type: Number,
-    require: true,
-  },
-  publisher: {
+  penerbitid: {
     type: String,
-    require: true,
+    default: "",
   },
-  year: {
+  penulisid: {
     type: String,
-    require: true,
+    default: "",
   },
-  ebook: {
+  formatid: {
+    type: String,
+    default: "",
+  },
+  terbit: {
     type: String,
     require: true,
   },
   cover: {
     type: String,
     require: true,
+  },
+  keterangan: {
+    type: String,
+    default: "",
+  },
+  aktif: {
+    type: Number,
+    default: 1,
+  },
+  user: {
+    type: String,
+    default: "Burhan Fauzi Salam",
+  },
+  jam: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

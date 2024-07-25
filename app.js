@@ -5,6 +5,8 @@ import connectDB from "./db.js";
 import axios from "axios";
 import model from "./model.js";
 
+import addBooks from "./controller/addBook.js";
+
 dotenv.config();
 const port = process.env["PORT"] || 3000;
 
@@ -15,30 +17,18 @@ connectDB();
 app.use(cors());
 app.use(json());
 
-app.get("/data/:isbn", async (req, res) => {
-  const { isbn } = req.params;
+app.get("/data", async (req, res) => {
+  const { isbn } = req.query;
   try {
     const response = await axios.get(
       `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`
     );
     const bookData = response.data[`ISBN:${isbn}`];
     const data = {
-      title: bookData.title ? bookData.title : "",
-      author: bookData.authors ? bookData.authors[0].name : "",
-      page: bookData.number_of_pages
-        ? bookData.number_of_pages
-        : bookData.pagination
-        ? parseInt(bookData.pagination.split(" ")[0])
-        : "",
-      ISBN_10: bookData.identifiers.isbn_10
-        ? bookData.identifiers.isbn_10[0]
-        : "",
-      ISBN_13: bookData.identifiers.isbn_13
-        ? bookData.identifiers.isbn_13[0]
-        : "",
-      publisher: bookData.publishers ? bookData.publishers[0].name : "",
-      year: bookData.publish_date ? bookData.publish_date : "",
-      ebook: bookData.ebooks ? bookData.ebooks[0].preview_url : "",
+      judul: bookData.title ? bookData.title : "",
+      penulisid: bookData.authors ? bookData.authors[0].name : "",
+      penerbitid: bookData.publishers ? bookData.publishers[0].name : "",
+      terbit: bookData.publish_date ? bookData.publish_date : "",
       cover: bookData.cover ? bookData.cover.large : "",
     };
     res.status(200).json(data);
@@ -61,25 +51,13 @@ app.get("/isbn/:isbn", async (req, res) => {
       return res.status(400).json({ message: "Book not found" });
     }
     const data = {
-      title: bookData.title ? bookData.title : "",
-      author: bookData.authors ? bookData.authors[0].name : "",
-      page: bookData.number_of_pages
-        ? bookData.number_of_pages
-        : bookData.pagination
-        ? parseInt(bookData.pagination.split(" ")[0])
-        : "",
-      ISBN_10: bookData.identifiers.isbn_10
-        ? bookData.identifiers.isbn_10[0]
-        : "",
-      ISBN_13: bookData.identifiers.isbn_13
-        ? bookData.identifiers.isbn_13[0]
-        : "",
-      publisher: bookData.publishers ? bookData.publishers[0].name : "",
-      year: bookData.publish_date ? bookData.publish_date : "",
-      ebook: bookData.ebooks ? bookData.ebooks[0].preview_url : "",
+      judul: bookData.title ? bookData.title : "",
+      penulisid: bookData.authors ? bookData.authors[0].name : "",
+      penerbitid: bookData.publishers ? bookData.publishers[0].name : "",
+      terbit: bookData.publish_date ? bookData.publish_date : "",
       cover: bookData.cover ? bookData.cover.large : "",
     };
-    const cekBook = await model.findOne({ ISBN_13: data.ISBN_13 });
+    const cekBook = await model.findOne({ judul: data.judul });
     if (cekBook) {
       return res.status(400).json({ message: "Book already in library" });
     }
@@ -90,6 +68,8 @@ app.get("/isbn/:isbn", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
+app.get("/add", addBooks);
 
 app.get("/books", async (req, res) => {
   try {
